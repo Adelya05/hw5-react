@@ -1,10 +1,10 @@
 import React from "react";
 
-const Button = ({ onClick, text }) => {
+const Button = ({ onClick }) => { // Заменено onCLick на onClick
   return (
     <div className="todo-input-item">
-      <button onClick={onClick} className="primary-btn" type="button" >
-        {text}
+      <button onClick={onClick} className="primary-btn" type="button">
+        Add
       </button>
     </div>
   );

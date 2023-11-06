@@ -69,14 +69,21 @@ h1{
   width: 60px;
   cursor: pointer;
 }
+.clear{
+  background-color: rgb(123, 0, 0);
+  color: white;
+  border-radius: 0px;
+  border: none;
+  padding: 10px;
+  width: 60px;
+  cursor: pointer;
+}
 
 .primary-btn:hover{
   background-color: rgb(4, 192, 104);
 }
 
-.btn-area{
-  margin-bottom: 10px;
-}
+
 
 
 .secondaryBtn{
@@ -146,4 +153,13 @@ h1{
 
 .check-icon:hover{
   color: rgb(4, 192, 104);
+}
+
+
+.clear-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row-reverse;
+  margin-bottom: 20px;
 }
