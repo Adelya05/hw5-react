@@ -1,38 +1,36 @@
-import React from "react";
-import { BsSave } from "react-icons/bs";
+import React, { Component } from 'react';
+import { BsSave } from 'react-icons/bs';
 
-const Edit = ({
-  isEditing,
-  editedTodoId,
-  editedTodoTitle,
-  editedTodoDescription,
-  setEditedTodoTitle,
-  setEditedTodoDescription,
-  handleSaveEditedTodo,
-}) => {
-  if (!isEditing) {
-    return null;
+class Edit extends Component {
+  constructor(props) {
+    super(props);
   }
 
-  const handleSave = () => {
-    handleSaveEditedTodo(editedTodoId);
+  handleSave = () => {
+    this.props.handleSaveEditedTodo(this.props.editedTodoId);
   };
 
-  return (
-    <div className="todo-list-item">
-      <input
-      className="todo-input-item"
-        type="text"
-        value={editedTodoTitle}
-        onChange={(e) => setEditedTodoTitle(e.target.value)}
-      />
-      <input
-        value={editedTodoDescription}
-        onChange={(e) => setEditedTodoDescription(e.target.value)}
-      />
-      <BsSave onClick={handleSave} title="Save" className="icon" />
-    </div>
-  );
-};
+  render() {
+    if (!this.props.isEditing) {
+      return null;
+    }
+
+    return (
+      <div className="todo-list-item">
+        <input
+          className="todo-input-item"
+          type="text"
+          value={this.props.editedTodoTitle}
+          onChange={(e) => this.props.setEditedTodoTitle(e.target.value)}
+        />
+        <input
+          value={this.props.editedTodoDescription}
+          onChange={(e) => this.props.setEditedTodoDescription(e.target.value)}
+        />
+        <BsSave onClick={this.handleSave} title="Save" className="icon" />
+      </div>
+    );
+  }
+}
 
 export default Edit;

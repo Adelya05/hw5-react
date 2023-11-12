@@ -1,48 +1,56 @@
-
 import React from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsCheckLg } from "react-icons/bs";
 import { IoMdRefresh } from "react-icons/io";
 
-const TodoItem = ({
-  todoTitle,
-  todoDescription,
-  handleDeleteTodo, 
-  handleDeleteCompletedTodo,
-  id,
-  handleCommit,
-  index,
-  isCompletedScreen,
-}) => {
-  const handleDelete = () => {
-    if (isCompletedScreen) {
-      handleDeleteCompletedTodo(id);
+
+class TodoItem extends React.Component {
+  handleDelete = () => {
+    if (this.props.isCompletedScreen) {
+      this.props.handleDeleteCompletedTodo(this.props.id);
     } else {
-      handleDeleteTodo(id);
+      this.props.handleDeleteTodo(this.props.id);
     }
-  };
+  }
+  handleCommit = () => {
+    this.props.handleCommit(this.props.id);
+  }
 
-  return (
-    <div className="todo-list-item">
-      <div>
-        <h3>{todoTitle}</h3>
-        <p>{todoDescription}</p>
-      </div>
-      <div>
-        <AiOutlineDelete onClick={handleDelete} title="Delete?" className="icon" />
+  render() {
+    const {
+      todoTitle,
+      todoDescription,
+      handleDeleteTodo, 
+      handleDeleteCompletedTodo,
+      id,
+      handleCommit,
+      index,
+      isCompletedScreen,
+    } = this.props;
 
-        {isCompletedScreen ? (
-          <IoMdRefresh className="icon" onClick={() => handleCommit(id)} />
-        ) : (
-          <BsCheckLg
-            onClick={() => handleCommit(id)}
-            title="Completed?"
-            className=" check-icon"
-          />
-        )}
+    return (
+      <div className="todo-list-item">
+        <div>
+          <h3>{todoTitle}</h3>
+          <p>{todoDescription}</p>
+        </div>
+        <div>
+          <AiOutlineDelete onClick={this.handleDelete} title="Delete?" className="icon" />
+  
+          {isCompletedScreen ? (
+            <IoMdRefresh className="icon" onClick={this.handleCommit} />
+          ) : (
+            <BsCheckLg
+              onClick={this.handleCommit}
+              title="Completed?"
+              className=" check-icon"
+            />
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 export default TodoItem;
+

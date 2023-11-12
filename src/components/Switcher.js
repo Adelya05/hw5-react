@@ -1,20 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 
-const Switcher = ({ isCompletedScreen, setIsCompletedScreen }) => {
-  return (
-    <div className="btn-area">
-      <button
-        onClick={() => setIsCompletedScreen(false)}
-        className={`secondaryBtn ${isCompletedScreen === false && "active"}`}>
-        To Do
-      </button>
-      <button
-        onClick={() => setIsCompletedScreen(true)}
-        className={`secondaryBtn ${isCompletedScreen === true && "active"}`}>
-        Completed
-      </button>
-    </div>
-  );
-};
+class Switcher extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="btn-area">
+        <button
+          onClick={() => this.props.setIsCompletedScreen(false)}
+          className={`secondaryBtn ${this.props.isCompletedScreen === false && "active"}`}>
+          To Do
+        </button>
+        <button
+          onClick={() => this.props.setIsCompletedScreen(true)}
+          className={`secondaryBtn ${this.props.isCompletedScreen === true && "active"}`}>
+          Completed
+        </button>
+      </div>
+    );
+  }
+}
 
 export default Switcher;

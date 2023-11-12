@@ -1,84 +1,83 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
+import React, { Component } from 'react';
+import './App.css';
 
-import Input from "./components/Input";
-import Button from "./components/Button";
-import Switcher from "./components/Switcher";
-import TodoItem from "./components/TodoItem";
-import Clear from "./components/Clear";
-import Edit from "./components/Edit";
-import { BiEdit } from "react-icons/bi";
+import Input from './components/Input';
+import Button from './components/Button';
+import Switcher from './components/Switcher';
+import TodoItem from './components/TodoItem';
+import Clear from './components/Clear';
+import Edit from './components/Edit';
+import { BiEdit } from 'react-icons/bi';
 
-function App() {
-  const [newTodoTitle, setNewTodoTitle] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [allTodos, setAllTodos] = useState([]);
-  const [completedTodos, setCompletedTodos] = useState([]);
-  const [isCompletedScreen, setIsCompletedScreen] = useState(false);
+class App extends Component {
+  constructor() {
+    super();
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTodoId, setEditedTodoId] = useState(null);
-  const [editedTodoTitle, setEditedTodoTitle] = useState("");
-  const [editedTodoDescription, setEditedTodoDescription] = useState("");
-// ///////
-const handleEditTodo = (id) => {
-  const todoToEdit = allTodos.find((item) => item.id === id);
-  setEditedTodoId(id);
-  setEditedTodoTitle(todoToEdit.title);
-  setEditedTodoDescription(todoToEdit.description);
-  setIsEditing(true);
-};
-
-const handleEditedTodo = () => {
-  const updatedTodos = allTodos.map((item) => {
-    if (item.id === editedTodoId) {
-      return {
-        ...item,
-        title: editedTodoTitle,
-        description: editedTodoDescription,
-      };
-    }
-    return item;
-  });
-
-  setAllTodos(updatedTodos);
-  setIsEditing(false);
-  setEditedTodoId(null);
-  setEditedTodoTitle("");
-  setEditedTodoDescription("");
-};
-
-
-  
-  useEffect(() => {
-    const fetchTodos = async () => {
-      await fetch("https://jsonplaceholder.typicode.com/todos")
-        .then((res) => res.json())
-        .then((res) => console.log(res));
+    this.state = {
+      newTodoTitle: '',
+      newDescription: '',
+      allTodos: [],
+      completedTodos: [],
+      isCompletedScreen: false,
+      isEditing: false,
+      editedTodoId: null,
+      editedTodoTitle: '',
+      editedTodoDescription: '',
     };
-    fetchTodos();
-  },);
-/////
-  const handleAddNewTodo = () => {
-    if (newDescription && newTodoTitle) {
+  }
+
+  handleEditTodo = (id) => {
+    const todoToEdit = this.state.allTodos.find((item) => item.id === id);
+    this.setState({
+      editedTodoId: id,
+      editedTodoTitle: todoToEdit.title,
+      editedTodoDescription: todoToEdit.description,
+      isEditing: true,
+    });
+  };
+
+  handleEditedTodo = () => {
+    const updatedTodos = this.state.allTodos.map((item) => {
+      if (item.id === this.state.editedTodoId) {
+        return {
+          ...item,
+          title: this.state.editedTodoTitle,
+          description: this.state.editedTodoDescription,
+        };
+      }
+      return item;
+    });
+
+    this.setState({
+      allTodos: updatedTodos,
+      isEditing: false,
+      editedTodoId: null,
+      editedTodoTitle: '',
+      editedTodoDescription: '',
+    });
+  };
+
+  handleAddNewTodo = () => {
+    if (this.state.newDescription && this.state.newTodoTitle) {
       const date = new Date();
       let newTodoObj = {
         id: date.getMilliseconds(),
-        title: newTodoTitle,
-        description: newDescription,
+        title: this.state.newTodoTitle,
+        description: this.state.newDescription,
       };
 
-      let updatedTodoArr = [...allTodos];
+      let updatedTodoArr = [...this.state.allTodos];
       updatedTodoArr.push(newTodoObj);
 
-      setAllTodos(updatedTodoArr);
-
-      setNewTodoTitle("");
-      setNewDescription("");
+      this.setState({
+        allTodos: updatedTodoArr,
+        newTodoTitle: '',
+        newDescription: '',
+      });
     }
   };
-/////
-  const handleCommit = (index) => {
+
+  handleCommit = (index) => {
     const date = new Date();
     let dd = date.getDate();
     let mm = date.getMonth();
@@ -86,119 +85,149 @@ const handleEditedTodo = () => {
     let hh = date.getHours();
     let minutes = date.getMinutes();
     let ss = date.getSeconds();
-    let finalDate = `${dd}-${mm}-${yyyy} at ${hh}:${minutes}:${ss}`;
+    let finalDate =
+      dd +
+      '-' +
+      mm +
+      '-' +
+      yyyy +
+      '-' +
+      ' at' +
+      hh +
+      ':' +
+      minutes +
+      ':' +
+      ss;
 
     let filteredTodo = {
-      ...allTodos.find((item) => item.id === index),
+      ...this.state.allTodos.find((item) => item.id === index),
       completed_at: finalDate,
     };
 
-    let updatedList = [...completedTodos, filteredTodo];
-    console.log(updatedList);
-    setCompletedTodos(updatedList);
+    let updatedList = [...this.state.completedTodos, filteredTodo];
 
-    handleDeleteTodo(index);
+    this.setState({
+      completedTodos: updatedList,
+    });
+    this.handleDeleteTodo(index);
   };
 
-  const handleToDo = (index) => {
+  handleToDo = (index) => {
     let todo = {
-      ...completedTodos.find((item) => item.id === index),
+      ...this.state.completedTodos.find((item) => item.id === index),
     };
 
-    setAllTodos([...allTodos, todo]);
-    setCompletedTodos(completedTodos.filter((item) => item.id !== index));
-  };
-/////
-  const handleDeleteTodo = (id) => {
-    setAllTodos(allTodos.filter((item, index) => item.id !== id));
-  };
-  const handleDeleteCompletedTodo = (id) => {
-    setCompletedTodos(completedTodos.filter((item) => item.id !== id));
-  };
-////
-  const handleClear = () => {
-    setAllTodos([]);
-  };
- 
+    this.setState({
+      allTodos: [...this.state.allTodos, todo],
+    });
 
-return (
-  <div className="App">
-     <h1>My Todos</h1>
-  <div className="todo-wrapper">
-    <div className="todo-input">
-      <Input
-        value={newTodoTitle}
-        setValue={setNewTodoTitle}
-        name={"Title"}
-        description={"What's the title of your To Do?"}
-      />
-      <Input
-        value={newDescription}
-        setValue={setNewDescription}
-        name={"Description"}
-        description={"What's the description of your To Do?"}
-      />
-      <Button onClick={handleAddNewTodo} />
-    </div>
-    <div className="clear-wrapper">
-      <Clear handleClear={handleClear} />
-      <Switcher
-        isCompletedScreen={isCompletedScreen}
-        setIsCompletedScreen={setIsCompletedScreen}
-      />
-    </div>
- 
-    <div className="todo-list">
-      {isCompletedScreen === true
-        ? completedTodos?.map((item, index) => (
-            <div key={index}>
-              <TodoItem
-                handleCommit={handleToDo}
-                index={index}
-                handleDeleteTodo={handleDeleteTodo}
-                id={item.id}
-                isCompletedScreen={isCompletedScreen}
-                todoTitle={item.title}
-                todoDescription={item.description}
-                handleDeleteCompletedTodo={handleDeleteCompletedTodo}
-              />
-            </div>
-          ))
-        : allTodos.map((item, index) => (
-            <div >
-              <TodoItem
-              key={index}
-                handleCommit={handleCommit}
-                index={index}
-                handleDeleteTodo={handleDeleteTodo}
-                isCompletedScreen={isCompletedScreen}
-                id={item.id}
-                todoTitle={item.title}
-                todoDescription={item.description}
-                handleDeleteCompletedTodo={handleDeleteCompletedTodo}
-              />
-              {isEditing && editedTodoId === item.id && (
-                <Edit
-                key={index}
-                  isEditing={isEditing}
-                  editedTodoId={editedTodoId}
-                  editedTodoTitle={editedTodoTitle}
-                  editedTodoDescription={editedTodoDescription}
-                  setEditedTodoTitle={setEditedTodoTitle}
-                  setEditedTodoDescription={setEditedTodoDescription}
-                  handleSaveEditedTodo={handleEditedTodo}
-                />
-              )}
-              <BiEdit onClick={() => handleEditTodo(item.id)} title="Edit" className="icon-edit" />
-            </div>
-          ))}
-    </div>
-  </div>
-  </div>
-);
+    this.handleDeleteCompletedTodo(index);
+  };
+
+  handleDeleteTodo = (id) => {
+    this.setState({
+      allTodos: this.state.allTodos.filter((item) => item.id !== id),
+    });
+  };
+
+  handleDeleteCompletedTodo = (id) => {
+    this.setState({
+      completedTodos: this.state.completedTodos.filter((item) => item.id !== id),
+    });
+  };
+
+  handleClear = () => {
+    this.setState({
+      allTodos: [],
+    });
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <h1>My Todos</h1>
+        <div className="todo-wrapper">
+          <div className="todo-input">
+            <Input
+              value={this.state.newTodoTitle}
+              setValue={(value) => this.setState({ newTodoTitle: value })}
+              name={'Title'}
+              description={"What's the title of your To Do?"}
+            />
+            <Input
+              value={this.state.newDescription}
+              setValue={(value) => this.setState({ newDescription: value })}
+              name={'Description'}
+              description={"What's the description of your To Do?"}
+            />
+            <Button onClick={this.handleAddNewTodo} />
+          </div>
+          <div className="clear-wrapper">
+            <Clear handleClear={this.handleClear} />
+            <Switcher
+              isCompletedScreen={this.state.isCompletedScreen}
+              setIsCompletedScreen={(value) => this.setState({ isCompletedScreen: value })}
+            />
+          </div>
+
+          <div className="todo-list">
+            {this.state.isCompletedScreen === true
+              ? this.state.completedTodos.map((item, index) => (
+                  <div key={index}>
+                    <TodoItem
+                      handleCommit={this.handleToDo}
+                      index={index}
+                      handleDeleteTodo={this.handleDeleteTodo}
+                      id={item.id}
+                      isCompletedScreen={this.state.isCompletedScreen}
+                      todoTitle={item.title}
+                      todoDescription={item.description}
+                      handleDeleteCompletedTodo={this.handleDeleteCompletedTodo}
+                     
+                    />
+                  </div>
+                ))
+              : this.state.allTodos.map((item, index) => (
+                  <div key={index}>
+                    <TodoItem
+                      handleCommit={this.handleCommit}
+                      index={index}
+                      handleDeleteTodo={this.handleDeleteTodo}
+                      isCompletedScreen={this.state.isCompletedScreen}
+                      id={item.id}
+                      todoTitle={item.title}
+                      todoDescription={item.description}
+                      handleDeleteCompletedTodo={this.handleDeleteCompletedTodo}
+                    />
+                    {this.state.isEditing && this.state.editedTodoId === item.id && (
+                      <Edit
+                        isEditing={this.state.isEditing}
+                        editedTodoId={this.state.editedTodoId}
+                        editedTodoTitle={this.state.editedTodoTitle}
+                        editedTodoDescription={this.state.editedTodoDescription}
+                        setEditedTodoTitle={(value) => this.setState({ editedTodoTitle: value })}
+                        setEditedTodoDescription={(value) =>
+                          this.setState({ editedTodoDescription: value })
+                        }
+                        handleSaveEditedTodo={this.handleEditedTodo}
+                      />
+                    )}
+                    <BiEdit
+                      onClick={() => this.handleEditTodo(item.id)}
+                      title="Edit"
+                      className="icon-edit"
+                    />
+                  </div>
+                ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
+
 
 
 

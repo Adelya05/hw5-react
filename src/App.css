@@ -154,14 +154,18 @@ h1{
 .check-icon:hover{
   color: rgb(4, 192, 104);
 }
-
 .icon-edit {
-  font-size: 22px;
+  font-size: 32px;
   cursor: pointer;
-  color: rgb(0, 230, 122);
-  margin-left: 10px;
+  color: rgb(19, 239, 30);
+  margin-left: 10px; /* Расстояние между иконкой "Edit" и иконками "check-icon" и "icon" */
   margin-bottom: 5px;
 }
+
+.icon-edit:hover {
+  color: rgb(4, 192, 104);
+}
+
 
 
 .clear-wrapper {
