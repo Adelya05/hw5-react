@@ -86,18 +86,7 @@ class App extends Component {
     let minutes = date.getMinutes();
     let ss = date.getSeconds();
     let finalDate =
-      dd +
-      '-' +
-      mm +
-      '-' +
-      yyyy +
-      '-' +
-      ' at' +
-      hh +
-      ':' +
-      minutes +
-      ':' +
-      ss;
+     dd + '-' + mm + '-' + yyyy + '-' + ' at' + hh + ':' + minutes + ':' + ss;
 
     let filteredTodo = {
       ...this.state.allTodos.find((item) => item.id === index),
